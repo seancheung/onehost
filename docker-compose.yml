@@ -1,0 +1,116 @@
+version: '2.1'
+services:
+  wwwroot:
+    image: tianon/true
+    volumes:
+      - ./www:/var/www
+      - ./log:/var/log
+      - ./run:/var/run
+  nginx:
+    image: seancheung/nginx:1-alpine
+    build:
+      context: ./src/nginx
+    ports:
+      - 80:80
+    links:
+      - php:fastcgi
+      - service:node
+    volumes_from:
+      - wwwroot
+    volumes:
+      - ./src/nginx/conf:/etc/nginx/conf
+  httpd:
+    image: seancheung/httpd:2-alpine
+    build:
+      context: ./src/httpd
+    ports:
+      - 8080:80
+    links:
+      - php:fastcgi
+      - service:node
+    volumes_from:
+      - wwwroot
+    volumes:
+      - ./src/httpd/conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./src/httpd/conf/vhost:/usr/local/apache2/conf/vhost
+  mysql:
+    image: seancheung/mysql:5-alpine
+    build:
+      context: ./src/mysql
+    expose:
+      - 3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+    volumes:
+      - ./src/mysql/conf:/var/mysql/conf
+      - ./src/mysql/data:/var/mysql/data
+  mongodb:
+    image: seancheung/mongodb:3-alpine
+    build:
+      context: ./src/mongodb
+    expose:
+      - 27017
+      - 28017
+    volumes:
+      ./src/mongodb/data:/data/db
+  redis:
+    image: seancheung/redis:3-alpine
+    build:
+      context: ./src/redis
+    expose:
+      - 6379
+    volumes:
+      - ./src/redis/conf/redis.conf:/etc/redis/redis/conf
+      - ./src/redis/data:/data
+  node:
+    image: seancheung/node:7-alpine
+    build:
+      context: ./src/node
+    links:
+      - mysql:mongodb
+      - redis:redis
+    expose:
+      - 3000
+    volumes_from:
+      - wwwroot
+    env_file: ./www/service/.env
+    working_dir: /var/www/service
+    command: npm start
+  php:
+    image: seancheung/php:7-fpm-alpine
+    build:
+      context: ./src/php
+    expose:
+      - 9000
+    links:
+      - mysql:mysql
+      - redis:redis
+    volumes_from:
+      - wwwroot
+    volumes:
+      - ./src/php/conf/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - ./src/php/conf/php-fpm.conf:/usr/local/etc/php-fpm.d/php-fpm.conf
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    links:
+      - mysql:db
+    ports:
+      - 8090:80
+  mongoexpress:
+    image: seancheung/node:7-alpine
+    build:
+      context: ./src/node
+    ports:
+      - 8080:8081
+    links:
+      - mongodb:mongo
+    environment:
+      - NPM_OPTIONS="--registry=https://registry.npm.taobao.org"
+      - GLOBAL_INSTALLS=mongo-express
+      - TZ=Asia/Shanghai
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - VCAP_APP_HOST=0.0.0.0
+      - ME_CONFIG_BASICAUTH_USERNAME=cotown
+      - ME_CONFIG_BASICAUTH_PASSWORD=Cotown2017
+    command: mongo-express

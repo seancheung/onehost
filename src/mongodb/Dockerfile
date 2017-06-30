@@ -1,9 +1,9 @@
 FROM alpine:latest
 MAINTAINER Sean Cheung <theoxuanx@gmail.com>
 
-COPY ./entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 
-RUN echo http://dl-4.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
+RUN echo http://dl-4.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
     apk add --update --no-cache mongodb dos2unix && \
     rm /usr/bin/mongosniff /usr/bin/mongoperf && \
     dos2unix /entrypoint.sh && \

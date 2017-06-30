@@ -1,0 +1,44 @@
+server
+{
+    listen 80;
+    listen [::]:80;
+
+    server_name domain_name;
+    return 301 https://$host$request_uri;
+}
+
+server
+{
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    ssl_certificate /path/to/fullchain.pem;
+    ssl_certificate_key /path/to/privkey.pem;
+
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+
+    server_name domain_name;
+    root /var/www/domain_name;
+    index index.php index.html index.htm;
+
+    include enable-php.conf;
+    include pathinfo.conf;
+    include wordpress.conf;
+
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+    {
+        expires      30d;
+    }
+
+    location ~ .*\.(js|css)?$
+    {
+        expires      12h;
+    }
+
+    location ~ /\.
+    {
+        deny all;
+    }
+
+    access_log  /var/log/nginx/domain_name.log;
+}

@@ -40,7 +40,7 @@ services:
     expose:
       - 3306
     environment:
-      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_ROOT_PASSWORD=password
     volumes:
       - ./src/mysql/conf:/var/mysql/conf
       - ./src/mysql/data:/var/mysql/data
@@ -73,7 +73,6 @@ services:
       - 3000
     volumes_from:
       - wwwroot
-    env_file: ./www/service/.env
     working_dir: /var/www/service
     command: npm start
   php:
@@ -111,6 +110,6 @@ services:
       - ME_CONFIG_MONGODB_SERVER=mongo
       - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
       - VCAP_APP_HOST=0.0.0.0
-      - ME_CONFIG_BASICAUTH_USERNAME=cotown
-      - ME_CONFIG_BASICAUTH_PASSWORD=Cotown2017
+      - ME_CONFIG_BASICAUTH_USERNAME=user
+      - ME_CONFIG_BASICAUTH_PASSWORD=password
     command: mongo-express

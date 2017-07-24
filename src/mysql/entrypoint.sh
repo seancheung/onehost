@@ -48,7 +48,7 @@ EOF
   fi
 
   # do not use --bootstrap here since we're using init-file
-  /usr/bin/mysqld --user=root --verbose=0 --init-file=$tfile
+  /usr/bin/mysqld --defaults-file=/var/mysql/conf/my.cnf --user=root --character-set-server=utf8 --verbose=0 --init-file=$tfile
   rm -f $tfile
 
   touch /var/mysql/data/.init

@@ -7,9 +7,7 @@ if [ ! -f /var/mysql/conf/my.cnf ]; then
 fi
 
 if [ -f /var/mysql/data/.init ]; then
-  echo "[i] MySQL data already present, skipping creation"  
-
-  /usr/bin/mysqld --user=root --verbose=0
+  echo "[i] MySQL data already present, skipping creation"
 else
   echo "[i] MySQL data not found, creating initial DBs"
 

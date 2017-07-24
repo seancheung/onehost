@@ -60,7 +60,7 @@ services:
     expose:
       - 6379
     volumes:
-      - ./src/redis/conf/redis.conf:/etc/redis/redis/conf
+      - ./src/redis/conf/redis.conf:/etc/redis/redis.conf
       - ./src/redis/data:/data
   node:
     image: seancheung/node:7-alpine

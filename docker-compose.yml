@@ -14,7 +14,7 @@ services:
       - 80:80
     links:
       - php:fastcgi
-      - service:node
+      - node:node
     volumes_from:
       - wwwroot
     volumes:
@@ -27,7 +27,7 @@ services:
       - 8080:80
     links:
       - php:fastcgi
-      - service:node
+      - node:node
     volumes_from:
       - wwwroot
     volumes:
@@ -52,7 +52,7 @@ services:
       - 27017
       - 28017
     volumes:
-      ./src/mongodb/data:/data/db
+      - ./src/mongodb/data:/data/db
   redis:
     image: seancheung/redis:3-alpine
     build:
@@ -67,7 +67,8 @@ services:
     build:
       context: ./src/node
     links:
-      - mysql:mongodb
+      - mongodb:mongodb
+      - mysql:mysql
       - redis:redis
     expose:
       - 3000

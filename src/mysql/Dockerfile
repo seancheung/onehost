@@ -12,7 +12,7 @@ RUN echo http://dl-2.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositorie
     chmod +x /entrypoint.sh && \
     apk del dos2unix
 
-VOLUME ["/var/mysql/data", "/var/mysql/conf", "/var/log/mysql", "/var/run/mysqld"]
+VOLUME ["/var/mysql/data", "/var/mysql/conf", "/var/log/mysql"]
 
 EXPOSE 3306
 

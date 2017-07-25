@@ -23,7 +23,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
     php -r "unlink('composer-setup.php');" && \
     chmod +x /usr/bin/composer
 
-VOLUME ["/var/run/php", "/var/log/php"]
+VOLUME ["/var/log/php"]
 
 EXPOSE 9000
 

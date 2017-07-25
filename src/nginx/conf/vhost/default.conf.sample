@@ -18,11 +18,7 @@ server
     listen 443 default_server ssl;
     listen [::]:443 default_server ssl ipv6only=on;
 
-    # ssl certificate(certbot with let's encrypt). See https://certbot.eff.org
-    ssl_certificate /path/to/fullchain.pem;
-    ssl_certificate_key /path/to/privkey.pem;
-
-    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+    include ssl.conf;
 
     # deny ip access
     return 403;

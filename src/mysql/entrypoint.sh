@@ -6,6 +6,10 @@ if [ ! -f /var/mysql/conf/my.cnf ]; then
   cp /etc/mysql/my.cnf /var/mysql/conf
 fi
 
+if [ ! -d /run/mysqld ]; then
+  mkdir -p /run/mysqld
+fi
+
 if [ -f /var/mysql/data/.init ]; then
   echo "[i] MySQL data already present, skipping creation"
 else
